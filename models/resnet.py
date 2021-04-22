@@ -3,7 +3,7 @@ from keras.applications.resnet50 import ResNet50
 from keras.layers import Input, Conv2DTranspose, BatchNormalization, ReLU, Conv2D, Lambda, MaxPooling2D, Dropout
 from keras.layers import ZeroPadding2D
 from keras.models import Model
-from keras.initializers import normal, constant, zeros
+from keras.initializers import constant, zeros
 from keras.regularizers import l2
 import keras.backend as K
 import tensorflow as tf

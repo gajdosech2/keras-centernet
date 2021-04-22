@@ -98,9 +98,10 @@ def create_callbacks(training_model, prediction_model, validation_generator, arg
         checkpoint = keras.callbacks.ModelCheckpoint(
             os.path.join(
                 args.snapshot_path,
-                '{dataset_type}_{{epoch:02d}}_{{loss:.4f}}_{{val_loss:.4f}}.h5'.format(dataset_type=args.dataset_type)
+                '{dataset_type}.h5'.format(dataset_type=args.dataset_type)
             ),
             verbose=1,
+            save_weights_only=True
             # save_best_only=True,
             # monitor="mAP",
             # mode='max'
@@ -255,7 +256,7 @@ def parse_args(args):
                             help='Path to CSV file containing annotations for validation (optional).')
 
     parser.add_argument('--snapshot', help='Resume training from a snapshot.',
-                        default='/home/adam/.keras/models/ResNet-50-model.keras.h5')
+                        default='./checkpoints/csv_20_4.2796.h5')
     parser.add_argument('--freeze-backbone', help='Freeze training of backbone layers.', action='store_true')
 
     parser.add_argument('--batch-size', help='Size of the batches.', default=1, type=int)
@@ -267,7 +268,7 @@ def parse_args(args):
     parser.add_argument('--steps', help='Number of steps per epoch.', type=int, default=10000)
     parser.add_argument('--snapshot-path',
                         help='Path to store snapshots of models during training',
-                        default='checkpoints/{}'.format(today))
+                        default='checkpoints/')
     parser.add_argument('--tensorboard-dir', help='Log directory for Tensorboard output',
                         default='logs/{}'.format(today))
     parser.add_argument('--no-snapshots', help='Disable saving snapshots.', dest='snapshots', action='store_false')
@@ -306,11 +307,11 @@ def main(args=None):
 
     num_classes = train_generator.num_classes()
     model, prediction_model, debug_model = centernet(num_classes=num_classes, input_size=args.input_size,
-                                                     freeze_bn=True)
+                                                     freeze_bn=False)
 
     # create the model
     print('Loading model, this may take a second...')
-    model.load_weights(args.snapshot, by_name=True, skip_mismatch=True)
+    #model.load_weights(args.snapshot, by_name=True, skip_mismatch=True)
 
     # freeze layers
     if args.freeze_backbone:
